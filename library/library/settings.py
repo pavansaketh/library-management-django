@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ibrarymanagement',
+    'rest_framework',
+    'drf_yasg',
+    'librarymanagement',
 ]
 
 MIDDLEWARE = [
@@ -77,12 +79,12 @@ WSGI_APPLICATION = 'library.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db',
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "db",         # your DB name
+        "USER": "root",               # your DB user
+        "PASSWORD": "root",  # your DB password
+        "HOST": "localhost",          # NOT None — use '' or 'localhost'
+        "PORT": "3306", 
     }
 }
 
