@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'library.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "db",         # your DB name
-        "USER": "root",               # your DB user
-        "PASSWORD": "root",  # your DB password
-        "HOST": "localhost",          # NOT None — use '' or 'localhost'
+        "NAME": "db",         
+        "USER": "root",               
+        "PASSWORD": "root",  
+        "HOST": "localhost",          
         "PORT": "3306", 
     }
 }
