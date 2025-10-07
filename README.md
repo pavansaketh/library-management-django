@@ -25,7 +25,7 @@ Language: Python
 
 Clone the repository:
 ```bash
-git clone https://github.com/yourusername/library-management-django.git
+git clone https://github.com/library-management-django.git
 cd library-management-django
 
 activate the virtual environment:
