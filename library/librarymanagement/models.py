@@ -1,14 +1,8 @@
-
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-
-# models.py
 from datetime import date
 from django.db import models
 
-# -------------------------
-# Library
-# -------------------------
 class Library(models.Model):
     id = models.AutoField(primary_key=True, db_column='library_id')   # use .id in code
     name = models.CharField(max_length=100, db_column='name')
@@ -26,10 +20,6 @@ class Library(models.Model):
     def __str__(self):
         return self.name
 
-
-# -------------------------
-# Author
-# -------------------------
 class Author(models.Model):
     id = models.AutoField(primary_key=True, db_column='author_id')
     first_name = models.CharField(max_length=100, db_column='first_name')
@@ -47,10 +37,6 @@ class Author(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-
-# -------------------------
-# Category
-# -------------------------
 class Category(models.Model):
     id = models.AutoField(primary_key=True, db_column='category_id')
     name = models.CharField(max_length=100, db_column='name')
@@ -66,10 +52,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
-# -------------------------
-# Book
-# -------------------------
 class Book(models.Model):
     id = models.AutoField(primary_key=True, db_column='book_id')
     title = models.CharField(max_length=200, db_column='title')
@@ -84,7 +66,6 @@ class Book(models.Model):
     created_at = models.DateTimeField(null=True, db_column='created_at')
     updated_at = models.DateTimeField(null=True, db_column='updated_at')
 
-    # M2M relationships through existing junction tables (defined below)
     authors = models.ManyToManyField(Author, through='BookAuthor', related_name='books')
     categories = models.ManyToManyField(Category, through='BookCategory', related_name='books')
 
@@ -98,10 +79,6 @@ class Book(models.Model):
     def is_available(self):
         return (self.available_copies or 0) > 0
 
-
-# -------------------------
-# Member
-# -------------------------
 class Member(models.Model):
     id = models.AutoField(primary_key=True, db_column='member_id')
     first_name = models.CharField(max_length=100, db_column='first_name')
@@ -121,10 +98,6 @@ class Member(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
-
-# -------------------------
-# Borrowing
-# -------------------------
 class Borrowing(models.Model):
     id = models.AutoField(primary_key=True, db_column='borrowing_id')
     member = models.ForeignKey(Member, db_column='member_id', on_delete=models.DO_NOTHING, related_name='borrowings')
@@ -143,10 +116,6 @@ class Borrowing(models.Model):
     def __str__(self):
         return f"{self.member} borrowed {self.book}"
 
-
-# -------------------------
-# Review
-# -------------------------
 class Review(models.Model):
     id = models.AutoField(primary_key=True, db_column='review_id')
     member = models.ForeignKey(Member, db_column='member_id', on_delete=models.DO_NOTHING, related_name='reviews')
@@ -165,10 +134,6 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.book} - {self.rating} stars"
 
-
-# -------------------------
-# Junctions: BookAuthor (book <-> author)
-# -------------------------
 class BookAuthor(models.Model):
     book = models.ForeignKey(Book, db_column='book_id', on_delete=models.DO_NOTHING)
     author = models.ForeignKey(Author, db_column='author_id', on_delete=models.DO_NOTHING)
@@ -180,10 +145,6 @@ class BookAuthor(models.Model):
         managed = False
         unique_together = (('book', 'author'),)
 
-
-# -------------------------
-# Junctions: BookCategory (book <-> category)
-# -------------------------
 class BookCategory(models.Model):
     book = models.ForeignKey(Book, db_column='book_id', on_delete=models.DO_NOTHING)
     category = models.ForeignKey(Category, db_column='category_id', on_delete=models.DO_NOTHING)

@@ -40,7 +40,7 @@ class BookSearchAPIView(APIView):
                 Q(categories__name__icontains=query)
             ).distinct()
 
-        # prefetch authors/categories to avoid N+1
+
         books = books.prefetch_related('authors', 'categories', 'library')
         serializer = BookSerializer(books, many=True)
         return Response(serializer.data)
@@ -78,7 +78,6 @@ class BorrowBookAPIView(APIView):
         if not book.is_available():
             return Response({'error': 'Book not available'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Create borrowing - set borrow_date and due_date explicitly (DB expects borrow_date)
         borrow_date = datetime.now().date()
         due_date = borrow_date + timedelta(days=days)
 
@@ -89,11 +88,10 @@ class BorrowBookAPIView(APIView):
             due_date=due_date
         )
 
-        # Update book availability
-        # If you need concurrency safety, wrap this in a transaction + select_for_update
+
         book.available_copies = (book.available_copies or 0) - 1
         if book.available_copies < 0:
-            # should not happen due to earlier check, but guard anyway
+
             book.available_copies = 0
         book.save(update_fields=['available_copies'])
 
@@ -114,12 +112,12 @@ class ReturnBookAPIView(APIView):
         if borrowing.is_returned:
             return Response({'error': 'Book already returned'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Update borrowing
+
         borrowing.return_date = datetime.now().date()
         borrowing.is_returned = True
         borrowing.save(update_fields=['return_date', 'is_returned'])
 
-        # Update book availability
+
         book = borrowing.book
         book.available_copies = (book.available_copies or 0) + 1
         book.save(update_fields=['available_copies'])
